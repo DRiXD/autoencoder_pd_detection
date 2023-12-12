@@ -159,15 +159,15 @@ def build_features(file, coin, time_freq, rolling_freq, index):
     return results_df.dropna()
 
 
-def build_features_multi(time_freq, rolling_freq):
+def build_features_multi(time_freq, rolling_freq, csv_path):
     files = glob.glob(path)
     # print(f"Files: {files}")
     all_results_df = pd.DataFrame()
     count = 0
-    pumps = pd.read_csv("transformed.csv")
+    pumps = pd.read_csv(csv_path)
     pumps = pumps[pumps["exchange"] == "binance"]
-    # print("PUMPS")
-    # print(pumps.head())
+    print("PUMPS")
+    print(pumps.head())
     for f in files:
         print(f)
         coin_date, time = os.path.basename(f[: f.rfind(".")]).split(" ")
@@ -209,13 +209,16 @@ def build_features_multi(time_freq, rolling_freq):
         #    " ----------------------------------------------------------------------------------- "
         # )
 
+    print("HI")
+    if not os.path.exists("features/"):
+        os.makedirs("features/")
+
     all_results_df.to_csv(
         "features/features_{}.csv".format(time_freq), index=False, float_format="%.3f"
     )
 
 
 def compute_features():
-    # ToDo Check rolling freq
     build_features_multi(time_freq="25S", rolling_freq=10)
     build_features_multi(time_freq="15S", rolling_freq=10)
     build_features_multi(time_freq="5S", rolling_freq=20)

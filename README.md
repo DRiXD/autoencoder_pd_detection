@@ -2,13 +2,64 @@
 This repository holds the code developed for my master thesis "Unmasking Cryptocurrency Pump and Dump Schemes:
 An Autoencoder Approach for Detection"
 
+```python 
+autoencoder_pd_detection
+├── README.md
+├── requirements.txt
+├── data
+│   ├── combine_csvs.ipynb #combines La Morgia Data & NatSD into one csv
+│   ├── combined #combined csvs           
+│   ├── la_morgia_data #La Morgia Data
+│   └── natural_sd #NatSD Data
+├── models
+│   ├── naive_bayes.ipynb
+│   ├── autoencoder
+│   │   ├── ae_evaluate_model.ipynb #calculates plots for the best ae model
+│   │   ├── ae_models.py #holds different architectures
+│   │   ├── ae_sweep.py #conducts the random search to find the best ae model
+│   │   ├── best_model #weights and config for best ae model found by us
+│   │   └── random_search_conf_ae.yml #config for ae_sweep.py
+│   └── vae
+│       ├── best_model #weights and config for best vae model found by us
+│       ├── keras_vae_sweep.py #conducts the random search to find the best vae model
+│       ├── random_search_conf_vae.yml #config for keras_vae_sweep.py
+│       └── vae_evaluate_model.ipynb #calculates plots for the best vae model
+├── natsd_dataset             
+│   ├── analyze_data.ipynb #calculates plots and statistics for the finished NatSD data
+│   ├── download_price_data.ipynb #downloads raw price data from binance
+│   ├── build_dataset.ipynb #builds NatSD dataset from raw price data
+│   ├── la_morgia_features.py #used in build_dataset to calculate the features
+├── plots                     
+│   ├── mean_spike_time.ipynb #plots mean spike times figure
+└── transaction_analysis
+    ├── transfers_overall.ipynb #conducts the qualitative transaction analysis
+    └── web3_helpers.py #helper functions for transfers_overall.ipynb
+```
+
+
 ## Installation
 Install the requirements for this repo
 ```
 pip3 install -r requirements.txt
 ```
 
+** Describe setup for wandb search **
 
+
+## Build NatSD Dataset
+The computed features for the NatSD Dataset can be found in the `data` folder.
+
+To build the NatSD Dataset from scratch go into the `data` folder.
+
+With `download_price_data.ipynb` the raw price data from Binance API can be downloaded. The desired coin-pairings and time-range can be specified there.
+
+After this `build_dataset.ipynb` can be used to find the maximum drawdowns / spikes and compute the features using the code provided by La Morgia et al. (see `la_morgia_features.py`).
+
+With `analyze_data.ipynb` the raw price data can be checked for gaps the Binance API has in the specified time-range. Also some statistics and plots can be computed.
+
+## Run Autoencoder / Variational Autoencoder
+
+** ToDo: Describe **
 
 ## Baselines
 
