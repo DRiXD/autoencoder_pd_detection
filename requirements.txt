@@ -1,3 +1,10 @@
 jupyter
 pandas
 requests
+numpy
+tensorflow
+scikit-learn
+wandb
+matplotlib
+seaborn
+umap-learn
