@@ -20,7 +20,8 @@ from ae_models import Autoencoder_8_4, Autoencoder_8_6_4, Autoencoder_8_7_5
 def create_datasets():
     time_freq = "15S"
     computed_data = pd.read_csv(
-        "../data/features_" + time_freq + ".csv.gz", parse_dates=["date"]
+        "../../data/la_morgia_data/features_" + time_freq + ".csv.gz",
+        parse_dates=["date"],
     )
 
     normal_datapoints = computed_data[computed_data["gt"] == 0]

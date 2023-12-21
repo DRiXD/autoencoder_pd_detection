@@ -8,30 +8,15 @@ path = "data/*.csv"
 
 
 def std_rush_order_feature(df_buy, time_freq, rolling_freq):
-    # print(
-    #    "????????????????????????std_rush_order_feature???????????????????????????????????????"
-    # )
     df_buy = df_buy.groupby(df_buy.index).count()
-    # print("DF_BUY")
-    # print(df_buy.head())
     df_buy[df_buy == 1] = 0
-    # print(df_buy.head())
     df_buy[df_buy > 1] = 1
-    # print(df_buy.head())
     buy_volume = df_buy.groupby(pd.Grouper(freq=time_freq))["btc_volume"].sum()
-    # print(f"Buy volume: {buy_volume}")
     buy_count = df_buy.groupby(pd.Grouper(freq=time_freq))["btc_volume"].count()
-    # print(f"Buy Count: {buy_count}")
     buy_volume.drop(buy_volume[buy_count == 0].index, inplace=True)
     buy_volume.dropna(inplace=True)
-    # print("Buy Volumqe: ", buy_volume)
     rolling_diff = buy_volume.rolling(window=rolling_freq).std()
-    # print("Rolling_Diff: ", rolling_diff)
     results = rolling_diff.pct_change()
-    # print("RESULTS: ", results)
-    # print(
-    #    "????????????????????????std_rush_order_feature???????????????????????????????????????"
-    # )
     return results
 
 
@@ -100,10 +85,8 @@ def avg_price_max(df_buy_rolling):
 
 
 def chunks_time(df_buy_rolling):
-    # compute any kind of aggregation
     buy_volume = df_buy_rolling["price"].max()
     buy_volume.dropna(inplace=True)
-    # the index contains time info
     return buy_volume.index
 
 
@@ -114,19 +97,8 @@ def build_features(file, coin, time_freq, rolling_freq, index):
 
     df_buy = df[df["side"] == "buy"]
     df_buy_grouped = df_buy.groupby(pd.Grouper(freq=time_freq))
-    # print("df_buy_grouped")
-    # print(df_buy_grouped.head())
 
     date = chunks_time(df_buy_grouped)
-    # print(f"DATE: {date}")
-    # print(f"INDEX: {index}")
-
-    # print(
-    #    f"STD_RUSH_ORDER: { std_rush_order_feature(df_buy, time_freq, rolling_freq).values}"
-    # )
-    # print(
-    #    f"AVG_RUSH_ORDER: {avg_rush_order_feature(df_buy, time_freq, rolling_freq).values}"
-    # )
 
     results_df = pd.DataFrame(
         {
@@ -151,8 +123,6 @@ def build_features(file, coin, time_freq, rolling_freq, index):
         }
     )
     pd.set_option("display.max_columns", None)
-    # print("results_df")
-    # print(results_df.head())
 
     results_df["symbol"] = coin
     results_df["gt"] = 0
@@ -183,18 +153,13 @@ def build_features_multi(time_freq, rolling_freq, csv_path):
             )
             == 0
         )
-        # print(f"Skip pump: {skip_pump}")
         if skip_pump:
             continue
 
-        # print(f"SET INDEX: {count}")
         results_df = build_features(f, coin, time_freq, rolling_freq, count)
-        # print("RESULTS DF")
-        # print(results_df.head())
-
         date_datetime = datetime.datetime.strptime(date + " " + time, "%Y-%m-%d %H.%M")
 
-        # We consider 24 hours before and 24 hours after the pump
+        # We consider 2 minutes around the pump and dump event
         results_df = results_df[
             (results_df["date"] >= date_datetime - datetime.timedelta(minutes=2))
             & (results_df["date"] <= date_datetime + datetime.timedelta(minutes=2))
@@ -203,13 +168,6 @@ def build_features_multi(time_freq, rolling_freq, csv_path):
         all_results_df = pd.concat([all_results_df, results_df])
         count += 1
 
-        # print("GT 1")
-        # print(results_df[results_df["gt"] == 1].head())
-        # print(
-        #    " ----------------------------------------------------------------------------------- "
-        # )
-
-    print("HI")
     if not os.path.exists("features/"):
         os.makedirs("features/")
 

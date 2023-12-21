@@ -9,6 +9,21 @@ def _fetch_contract_list():
     _write_dict_to_json_file("./coin_contracts.json", data)
 
 
+def _read_contract_list():
+    contract_path = "./coin_contracts.json"
+    try:
+        # Trying to open the file in read mode
+        with open(contract_path, "r") as file:
+            print("HERE")
+            data = json.load(file)
+    except FileNotFoundError:
+        # If file is not found, create it
+        with open(contract_path, "w") as file:
+            _fetch_contract_list()
+            data = json.load(file)
+    return data
+
+
 def _write_dict_to_json_file(outfile_name, data):
     json_data = json.dumps(data, indent=4)
     with open(outfile_name, "w") as outfile:
@@ -16,8 +31,7 @@ def _write_dict_to_json_file(outfile_name, data):
 
 
 def get_contract_for_symbol(symbol: str):
-    with open("./web3_helpers/coin_contracts.json", "r") as openfile:
-        data = json.load(openfile)
+    data = _read_contract_list()
 
     eth_address = ""
     for token in data:

@@ -31,6 +31,7 @@ autoencoder_pd_detection
 │   ├── la_morgia_features.py #used in build_dataset to calculate the features
 ├── plots                     
 │   ├── mean_spike_time.ipynb #plots mean spike times figure
+│   └── teaserfigure.ipynb #plots the teaserfigure
 └── transaction_analysis
     ├── transfers_overall.ipynb #conducts the qualitative transaction analysis
     └── web3_helpers.py #helper functions for transfers_overall.ipynb
@@ -38,12 +39,23 @@ autoencoder_pd_detection
 
 
 ## Installation
-Install the requirements for this repo
+Install the requirements for this repo:
 ```
 pip3 install -r requirements.txt
 ```
 
-** Describe setup for wandb search **
+## Run Autoencoder / Variational Autoencoder
+Our models are stored in the `models` folder.
+
+To run one of the models go into the specific folder.
+With the `<ae/vae>_evalute_model.ipynb` notebook the model can be tested with a specific configuration that can be given to him using the configuration in the top of the file.
+This notebook also creates the reconstruction errors and the latent space plots found in our paper.
+
+The random search for the hyperparameter optimzation was conducted using the [weights and biases](https://wandb.ai/site) library. The code for this can be found in the `<ae/vae>_sweep.py` files.
+To run the random search weights and biases needs to be setup as described in their [quickstart](https://docs.wandb.ai/quickstart).
+Inside the `random_search_conf_<a/vae>.yml` the search space for the random search can be defined.
+
+The best configurations found by us are given in the `best_model/` folder.
 
 
 ## Build NatSD Dataset
@@ -57,9 +69,6 @@ After this `build_dataset.ipynb` can be used to find the maximum drawdowns / spi
 
 With `analyze_data.ipynb` the raw price data can be checked for gaps the Binance API has in the specified time-range. Also some statistics and plots can be computed.
 
-## Run Autoencoder / Variational Autoencoder
-
-** ToDo: Describe **
 
 ## Baselines
 
