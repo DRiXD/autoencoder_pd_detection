@@ -160,7 +160,3 @@ cython_debug/
 #.idea/
 
 */download_dir/*
-
-*.csv
-*.png
-*.json
